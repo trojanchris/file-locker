@@ -4,8 +4,11 @@ class FileLocker {
         console.log('Error in Locker.', error);
     }
 
-    constructor(){
-        navigator.webkitPersistentStorage.requestQuota(5*1024*1024, (grantedBytes) => window.webkitRequestFileSystem(PERSISTENT, grantedBytes, fs => this.fs = fs));
+    constructor(persistent=false, bytes=5*1024*1024){
+		if(persistent)
+			navigator.webkitPersistentStorage.requestQuota(bytes, (grantedBytes) => window.webkitRequestFileSystem(PERSISTENT, grantedBytes, fs => this.fs = fs));
+		else
+			navigator.webkitTemporaryStorage.requestQuota(bytes, (grantedBytes) => window.webkitRequestFileSystem(TEMPORARY, grantedBytes, fs => this.fs = fs));
     }
 
     createDirectory(path, callback){
